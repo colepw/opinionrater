@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpinionRater</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>OpinionRater</h1>
+
+        <!-- User Opinion Input -->
+        <textarea id="userOpinion" placeholder="Type your opinion..."></textarea>
+        <button id="submitOpinion">Submit Opinion</button>
+
+        <!-- Generate Random Opinion -->
+        <button id="generateOpinion">Generate Opinion</button>
+        
+        <!-- Displayed Opinion -->
+        <div id="opinionDisplay" class="hidden">
+            <p id="opinionText"></p>
+            
+            <!-- Rating System -->
+            <div class="rating">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            <button id="submitRating">Submit Rating</button>
+
+            <!-- Rating Histogram & Average -->
+            <div id="ratingResults" class="hidden">
+                <canvas id="histogram"></canv

@@ -1,0 +1,63 @@
+body {
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+textarea {
+    width: 90%;
+    height: 80px;
+    background: black;
+    color: white;
+    border: 1px solid white;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: gray;
+}
+
+.rating {
+    font-size: 30px;
+}
+
+.star {
+    cursor: pointer;
+    color: white;
+    transition: color 0.2s;
+}
+
+.star:hover, .star.selected {
+    color: gold;
+}
+
+/* Hide elements until needed */
+.hidden {
+    display: none;
+}
+
+canvas {
+    background: white;
+    border-radius: 5px;
+    margin-top: 10px;
+}
