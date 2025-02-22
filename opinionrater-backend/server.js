@@ -50,7 +50,7 @@ app.get('/get-opinion', async (req, res) => {
         const { data, error } = await supabase
             .from('opinions')
             .select('*')
-            .order('created_at', { ascending: false })
+            .order('RANDOM()')
             .limit(1);
 
         if (error) {
