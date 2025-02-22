@@ -98,8 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
         if (data.ratings && data.average !== undefined) {
             displayHistogram(data.ratings);
-            document.getElementById("averageRating").textContent = `Average Rating: ${data.average.toFixed(2)} stars`;
-            document.getElementById("ratingResults").classList.remove("hidden");
+            // document.getElementById("averageRating").textContent = `Average Rating: ${data.average.toFixed(2)} stars`;
+            document.getElementById("ratingResults").style.display = "block";
         } else {
             console.error("No ratings found.");
         }
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 datasets: [{
                     label: "Ratings Count",
                     data: ratings,
-                    backgroundColor: "white",
+                    backgroundColor: "#3b3b38",
                     borderColor: "black",
                     borderWidth: 1
                 }]

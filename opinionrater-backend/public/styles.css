@@ -54,7 +54,11 @@ button:hover {
 }
 
 /* Hide elements until needed */
-.hidden {
+/* .hidden {
+    display: none;
+} */
+
+#ratingResults {
     display: none;
 }
 
