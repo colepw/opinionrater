@@ -5,7 +5,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require("path");
 
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -23,11 +22,12 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-
 // Submit an Opinion
 app.post('/submit-opinion', async (req, res) => {
     const { opinion } = req.body;
-    if (!opinion) return res.status(400).json({ error: "Opinion is required" });
+    if (!opinion) {
+        return res.status(400).json({ error: "Opinion is required" });
+    }
 
     try {
         const result = await pool.query(
@@ -49,7 +49,7 @@ app.get('/get-opinion', async (req, res) => {
         );
 
         if (result.rows.length === 0) {
-            return res.json({ error: "No opinions found" });
+            return res.status(404).json({ error: "No opinions found" });
         }
 
         res.json({ id: result.rows[0].id, opinion: result.rows[0].text });
@@ -62,7 +62,9 @@ app.get('/get-opinion', async (req, res) => {
 // Submit a Rating
 app.post('/submit-rating', async (req, res) => {
     const { opinionId, rating } = req.body;
-    if (!opinionId || !rating) return res.status(400).json({ error: "Opinion ID and rating are required" });
+    if (!opinionId || !rating) {
+        return res.status(400).json({ error: "Opinion ID and rating are required" });
+    }
 
     try {
         await pool.query(
@@ -97,7 +99,7 @@ app.get('/get-ratings/:id', async (req, res) => {
             ratingsArray[row.rating - 1] = parseInt(row.count);
         });
 
-        res.json({ ratings: ratingsArray, average: avgRating.rows[0].average });
+        res.json({ ratings: ratingsArray, average: avgRating.rows[0].average || 0 });
     } catch (error) {
         console.error("Error fetching ratings:", error);
         res.status(500).json({ error: "Database error" });

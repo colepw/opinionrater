@@ -11,21 +11,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentOpinionId = null;
     let selectedRating = 0;
-    
+
     // Submit an Opinion
     submitOpinionBtn.addEventListener("click", async () => {
         const opinion = opinionInput.value.trim();
         if (opinion === "") return alert("Please enter an opinion!");
 
-        const response = await fetch("/submit-opinion", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ opinion })
-        });
+        try {
+            const response = await fetch("/submit-opinion", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ opinion })
+            });
 
-        if (response.ok) {
-            alert("Opinion submitted!");
-            opinionInput.value = ""; // Clear input field
+            const data = await response.json();
+            if (data.success) {
+                alert("Opinion submitted!");
+                opinionInput.value = ""; // Clear input field
+            } else {
+                alert("Error: " + data.error);
+            }
+        } catch (error) {
+            console.error("Error submitting opinion:", error);
         }
     });
 
@@ -39,32 +46,46 @@ document.addEventListener("DOMContentLoaded", () => {
             opinionText.textContent = data.opinion;
             opinionDisplay.classList.remove("hidden");
             ratingResults.classList.add("hidden"); // Hide previous results
+            selectedRating = 0; // Reset rating selection
+            stars.forEach(s => s.classList.remove("selected"));
+        } else {
+            alert("No opinions found. Add one first!");
         }
     });
 
     // Handle Star Rating Selection
-    stars.forEach(star => {
+    stars.forEach((star, index) => {
         star.addEventListener("click", () => {
-            selectedRating = parseInt(star.getAttribute("data-value"));
-            stars.forEach(s => s.classList.remove("selected"));
-            for (let i = 0; i < selectedRating; i++) {
-                stars[i].classList.add("selected");
-            }
+            selectedRating = index + 1;
+            stars.forEach((s, i) => {
+                s.classList.toggle("selected", i < selectedRating);
+            });
         });
     });
 
     // Submit Rating
     submitRatingBtn.addEventListener("click", async () => {
-        if (selectedRating === 0) return alert("Please select a rating first!");
+        if (!currentOpinionId) {
+            return alert("Generate an opinion first!");
+        }
+        if (selectedRating === 0) {
+            return alert("Please select a rating first!");
+        }
 
-        const response = await fetch("/submit-rating", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ opinionId: currentOpinionId, rating: selectedRating })
-        });
+        try {
+            const response = await fetch("/submit-rating", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ opinionId: currentOpinionId, rating: selectedRating })
+            });
 
-        if (response.ok) {
-            fetchHistogramData();
+            if (response.ok) {
+                fetchHistogramData();
+            } else {
+                alert("Error submitting rating.");
+            }
+        } catch (error) {
+            console.error("Error submitting rating:", error);
         }
     });
 
@@ -73,31 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const response = await fetch(`/get-ratings/${currentOpinionId}`);
         const data = await response.json();
 
-        if (data.ratings && data.average) {
+        if (data.ratings && data.average !== undefined) {
             displayHistogram(data.ratings);
             averageRatingDisplay.textContent = `Average Rating: ${data.average.toFixed(2)} stars`;
             ratingResults.classList.remove("hidden");
         }
-    }
-
-    // Display Histogram
-    function displayHistogram(ratings) {
-        const ctx = document.getElementById("histogram").getContext("2d");
-        new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: ["1★", "2★", "3★", "4★", "5★"],
-                datasets: [{
-                    label: "Ratings Count",
-                    data: ratings,
-                    backgroundColor: "white",
-                    borderColor: "black",
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: { y: { beginAtZero: true } }
-            }
-        });
     }
 });
