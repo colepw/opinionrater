@@ -91,6 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fetch Histogram Data
     async function fetchHistogramData() {
+        console.log("Fetching histogram data...");
+
         const response = await fetch(`/get-ratings/${currentOpinionId}`);
         const data = await response.json();
     
