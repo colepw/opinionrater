@@ -47,9 +47,21 @@ app.post('/submit-opinion', async (req, res) => {
 // Get a Random Opinion
 app.get('/get-opinion', async (req, res) => {
     try {
-        const { data, error } = await supabase.from('opinions').select('*').order('created_at', { ascending: false }).limit(1);
-        if (error) throw error;
-        if (!data.length) return res.status(404).json({ error: "No opinions found" });
+        const { data, error } = await supabase
+            .from('opinions')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error) {
+            console.error("Supabase Query Error:", error);
+            return res.status(500).json({ error: "Supabase error", details: error });
+        }
+        if (!data || data.length === 0) {
+            console.log("No opinions found in Supabase.");
+            return res.status(404).json({ error: "No opinions found" });
+        }
+
         res.json(data[0]);
     } catch (error) {
         console.error("Error fetching opinion:", error);
