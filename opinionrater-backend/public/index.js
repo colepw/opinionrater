@@ -1,3 +1,5 @@
+const API_BASE_URL = "https://opinionrater.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
     const opinionInput = document.getElementById("userOpinion");
     const submitOpinionBtn = document.getElementById("submitOpinion");
@@ -18,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (opinion === "") return alert("Please enter an opinion!");
 
         try {
-            const response = await fetch("/submit-opinion", {
+            const response = await fetch(`${API_BASE_URL}/submit-opinion`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ opinion })
@@ -27,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             if (data.success) {
                 alert("Opinion submitted!");
-                opinionInput.value = ""; // Clear input field
+                opinionInput.value = "";
             } else {
                 alert("Error: " + data.error);
             }
@@ -38,15 +40,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Generate Random Opinion
     generateOpinionBtn.addEventListener("click", async () => {
-        const response = await fetch("/get-opinion");
+        const response = await fetch(`${API_BASE_URL}/get-opinion`);
         const data = await response.json();
 
         if (data.opinion) {
             currentOpinionId = data.id;
             opinionText.textContent = data.opinion;
             opinionDisplay.classList.remove("hidden");
-            ratingResults.classList.add("hidden"); // Hide previous results
-            selectedRating = 0; // Reset rating selection
+            ratingResults.classList.add("hidden");
+            selectedRating = 0;
             stars.forEach(s => s.classList.remove("selected"));
         } else {
             alert("No opinions found. Add one first!");
@@ -73,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch("/submit-rating", {
+            const response = await fetch(`${API_BASE_URL}/submit-rating`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ opinionId: currentOpinionId, rating: selectedRating })
@@ -93,12 +95,11 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchHistogramData() {
         console.log("Fetching histogram data...");
 
-        const response = await fetch(`/get-ratings/${currentOpinionId}`);
+        const response = await fetch(`${API_BASE_URL}/get-ratings/${currentOpinionId}`);
         const data = await response.json();
     
         if (data.ratings && data.average !== undefined) {
             displayHistogram(data.ratings);
-            // document.getElementById("averageRating").textContent = `Average Rating: ${data.average.toFixed(2)} stars`;
             document.getElementById("ratingResults").style.display = "block";
         } else {
             console.error("No ratings found.");
@@ -109,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const ctx = document.getElementById("histogram").getContext("2d");
     
         if (window.histogramChart) {
-            window.histogramChart.destroy(); // Destroy old chart before creating a new one
+            window.histogramChart.destroy();
         }
     
         window.histogramChart = new Chart(ctx, {
@@ -129,5 +130,4 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-    
 });
