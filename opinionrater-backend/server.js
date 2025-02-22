@@ -80,26 +80,29 @@ app.post('/submit-rating', async (req, res) => {
 });
 
 // Get Ratings for an Opinion
-app.get('/get-ratings/:id', async (req, res) => {
-    const { id } = req.params;
+app.get("/get-ratings/:id", async (req, res) => {
     try {
-        const { data: ratingCounts, error: ratingError } = await supabase
-            .from('ratings')
-            .select('rating, count:rating')
-            .eq('opinion_id', id)
-            .group('rating');
-        
-        const { data: avgRating, error: avgError } = await supabase
-            .from('ratings')
-            .select('average:avg(rating)')
-            .eq('opinion_id', id)
-            .single();
-        
-        if (ratingError || avgError) throw ratingError || avgError;
-        res.json({ ratings: ratingCounts, average: avgRating?.average || 0 });
-    } catch (error) {
-        console.error("Error fetching ratings:", error);
-        res.status(500).json({ error: "Database error" });
+        const { id } = req.params;
+        console.log(`Fetching ratings for opinion ID: ${id}`); // Log request ID
+
+        const { data, error } = await supabase
+            .from("ratings")
+            .select("*")
+            .eq("opinion_id", id);
+
+        if (error) {
+            console.error("Supabase Error:", error);
+            return res.status(500).json({ error: "Supabase query error", details: error.message });
+        }
+
+        if (!data.length) {
+            return res.status(404).json({ error: "No ratings found for this opinion" });
+        }
+
+        res.json({ ratings: data });
+    } catch (err) {
+        console.error("Server error:", err);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 
