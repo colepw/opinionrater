@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch(`${API_BASE_URL}/submit-opinion`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWlhZHd5bWphbXpwZ3F5Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTAxMDgsImV4cCI6MjA1NTc4NjEwOH0.s8VrApzS39wOUpWOglSSmk6KpGHJjyQKvKXRP1szQrs" },
                 body: JSON.stringify({ opinion })
             });
 
@@ -40,7 +40,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Generate Random Opinion
     generateOpinionBtn.addEventListener("click", async () => {
-        const response = await fetch(`${API_BASE_URL}/get-opinion`);
+        const response = await fetch(`${API_BASE_URL}/get-opinion`, {
+            method: "GET",
+            headers: {
+                "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWlhZHd5bWphbXpwZ3F5Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTAxMDgsImV4cCI6MjA1NTc4NjEwOH0.s8VrApzS39wOUpWOglSSmk6KpGHJjyQKvKXRP1szQrs",
+                "Content-Type": "application/json"
+             }
+        });
         const data = await response.json();
 
         if (data.opinion) {
@@ -77,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch(`${API_BASE_URL}/submit-rating`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWlhZHd5bWphbXpwZ3F5Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTAxMDgsImV4cCI6MjA1NTc4NjEwOH0.s8VrApzS39wOUpWOglSSmk6KpGHJjyQKvKXRP1szQrs" },
                 body: JSON.stringify({ opinionId: currentOpinionId, rating: selectedRating })
             });
 
@@ -95,7 +101,13 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchHistogramData() {
         console.log("Fetching histogram data...");
 
-        const response = await fetch(`${API_BASE_URL}/get-ratings/${currentOpinionId}`);
+        const response = await fetch(`${API_BASE_URL}/get-ratings/${currentOpinionId}`, {
+            method: "GET",
+            headers: {
+                "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWlhZHd5bWphbXpwZ3F5Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTAxMDgsImV4cCI6MjA1NTc4NjEwOH0.s8VrApzS39wOUpWOglSSmk6KpGHJjyQKvKXRP1szQrs",
+                "Content-Type": "application/json"
+             }
+        });
         const data = await response.json();
     
         if (data.ratings && data.average !== undefined) {
