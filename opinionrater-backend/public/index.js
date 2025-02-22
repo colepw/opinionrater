@@ -135,8 +135,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             console.log("Fetched Histogram Data:", data); // Log what the API actually returns
     
-            if (data.ratings && data.average !== undefined) {
-                displayHistogram(data.ratings);
+            if (data.ratings && data.ratings.length > 0) {
+                // Convert the ratings data into counts for each rating 1-5
+                const ratingCounts = [0, 0, 0, 0, 0];
+    
+                data.ratings.forEach(r => {
+                    if (r.rating >= 1 && r.rating <= 5) {
+                        ratingCounts[r.rating - 1]++;
+                    }
+                });
+    
+                console.log("Rating Counts for Chart:", ratingCounts);
+                displayHistogram(ratingCounts);
                 document.getElementById("ratingResults").style.display = "block";
             } else {
                 console.error("No ratings found.");
@@ -144,9 +154,9 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Fetch error:", error);
         }
-    }
+    }    
     
-    function displayHistogram(ratings) {
+    function displayHistogram(ratingCounts) {
         const ctx = document.getElementById("histogram").getContext("2d");
     
         if (window.histogramChart) {
@@ -156,18 +166,16 @@ document.addEventListener("DOMContentLoaded", () => {
         window.histogramChart = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: ["1★", "2★", "3★", "4★", "5★"],
+                labels: ["1★", "2★", "3★", "4★", "5★"], // Proper labels
                 datasets: [{
                     label: "Ratings Count",
-                    data: ratings,
+                    data: ratingCounts, // This must be an array of numbers!
                     backgroundColor: "#3b3b38",
                     borderColor: "black",
                     borderWidth: 1
                 }]
             },
-            options: {
-                scales: { y: { beginAtZero: true } }
-            }
+            options: { scales: { y: { beginAtZero: true } } }
         });
-    }
+    }    
 });
