@@ -93,11 +93,39 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchHistogramData() {
         const response = await fetch(`/get-ratings/${currentOpinionId}`);
         const data = await response.json();
-
+    
         if (data.ratings && data.average !== undefined) {
             displayHistogram(data.ratings);
-            averageRatingDisplay.textContent = `Average Rating: ${data.average.toFixed(2)} stars`;
-            ratingResults.classList.remove("hidden");
+            document.getElementById("averageRating").textContent = `Average Rating: ${data.average.toFixed(2)} stars`;
+            document.getElementById("ratingResults").classList.remove("hidden");
+        } else {
+            console.error("No ratings found.");
         }
     }
+    
+    function displayHistogram(ratings) {
+        const ctx = document.getElementById("histogram").getContext("2d");
+    
+        if (window.histogramChart) {
+            window.histogramChart.destroy(); // Destroy old chart before creating a new one
+        }
+    
+        window.histogramChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["1★", "2★", "3★", "4★", "5★"],
+                datasets: [{
+                    label: "Ratings Count",
+                    data: ratings,
+                    backgroundColor: "white",
+                    borderColor: "black",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+    
 });
