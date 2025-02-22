@@ -115,21 +115,34 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fetch Histogram Data
     async function fetchHistogramData() {
         console.log("Fetching histogram data...");
-
-        const response = await fetch(`${API_BASE_URL}/get-ratings/${currentOpinionId}`, {
-            method: "GET",
-            headers: {
-                "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWlhZHd5bWphbXpwZ3F5Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTAxMDgsImV4cCI6MjA1NTc4NjEwOH0.s8VrApzS39wOUpWOglSSmk6KpGHJjyQKvKXRP1szQrs",
-                "Content-Type": "application/json"
-             }
-        });
-        const data = await response.json();
     
-        if (data.ratings && data.average !== undefined) {
-            displayHistogram(data.ratings);
-            document.getElementById("ratingResults").style.display = "block";
-        } else {
-            console.error("No ratings found.");
+        try {
+            const response = await fetch(`${API_BASE_URL}/get-ratings/${currentOpinionId}`, {
+                method: "GET",
+                headers: {
+                    "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWlhZHd5bWphbXpwZ3F5Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTAxMDgsImV4cCI6MjA1NTc4NjEwOH0.s8VrApzS39wOUpWOglSSmk6KpGHJjyQKvKXRP1szQrs",
+                    "Content-Type": "application/json"
+                }
+            });
+    
+            console.log("Raw Response:", response); // Log the full response object
+    
+            if (!response.ok) {
+                console.error("API Error:", response.status, response.statusText);
+                return alert(`Error: ${response.status} - ${response.statusText}`);
+            }
+    
+            const data = await response.json();
+            console.log("Fetched Histogram Data:", data); // Log what the API actually returns
+    
+            if (data.ratings && data.average !== undefined) {
+                displayHistogram(data.ratings);
+                document.getElementById("ratingResults").style.display = "block";
+            } else {
+                console.error("No ratings found.");
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
         }
     }
     
