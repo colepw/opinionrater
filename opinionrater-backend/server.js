@@ -47,11 +47,7 @@ app.post('/submit-opinion', async (req, res) => {
 // Get a Random Opinion
 app.get('/get-opinion', async (req, res) => {
     try {
-        const { data, error } = await supabase
-            .from('opinions')
-            .select('*')
-            .order('RANDOM()')
-            .limit(1);
+        const { data, error } = await supabase.rpc('get_random_opinion');
 
         if (error) {
             console.error("Supabase Query Error:", error);
