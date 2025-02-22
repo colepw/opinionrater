@@ -41,11 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Generate Random Opinion
     generateOpinionBtn.addEventListener("click", async () => {
         const response = await fetch(`${API_BASE_URL}/get-opinion`, {
-            method: "GET",
+            /* method: "GET",
             headers: {
                 "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWlhZHd5bWphbXpwZ3F5Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTAxMDgsImV4cCI6MjA1NTc4NjEwOH0.s8VrApzS39wOUpWOglSSmk6KpGHJjyQKvKXRP1szQrs",
                 "Content-Type": "application/json"
-             }
+             } */
         });
         const data = await response.json();
 
@@ -102,11 +102,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Fetching histogram data...");
 
         const response = await fetch(`${API_BASE_URL}/get-ratings/${currentOpinionId}`, {
-            method: "GET",
+            /* method: "GET",
             headers: {
                 "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWlhZHd5bWphbXpwZ3F5Ym5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyMTAxMDgsImV4cCI6MjA1NTc4NjEwOH0.s8VrApzS39wOUpWOglSSmk6KpGHJjyQKvKXRP1szQrs",
                 "Content-Type": "application/json"
-             }
+             } */
         });
         const data = await response.json();
     
